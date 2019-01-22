@@ -21,3 +21,5 @@ WORKDIR ${SRC_DIR}
 COPY . ${SRC_DIR}
 WORKDIR ${SRC_DIR}/DataPrep
 RUN cget install .
+
+ENV PATH="${SRC_DIR}/DataPrep/cget/bin:${PATH}"
