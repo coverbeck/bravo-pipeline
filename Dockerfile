@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ENV SRC_DIR /tmp/data
+ENV SRC_DIR /srv/data
 
 RUN set -x \
     && apt-get update && apt-get install -y \
