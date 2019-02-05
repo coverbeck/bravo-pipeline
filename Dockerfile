@@ -1,6 +1,12 @@
-FROM ubuntu:16.04
+FROM ensemblorg/ensembl-vep
 
 ENV SRC_DIR /srv/data
+
+# Configure VEP with plugins needed for BRAVO
+WORKDIR ${OPT_SRC}/ensembl-vep
+RUN ./INSTALL.pl -a cfp --plugins LoF -s homo_sapiens -y GRCh38
+
+USER root
 
 RUN set -x \
     && apt-get update && apt-get install -y \
