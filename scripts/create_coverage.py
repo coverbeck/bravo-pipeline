@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import gzip
 import os
 import json
