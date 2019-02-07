@@ -1,0 +1,13 @@
+.DS_Store
+.envrc
+.idea/
+.vscode/
+*.gz
+*.jar
+*.json
+*.keep
+*.pyc
+*.tbi
+cromwell-executions/
+cromwell-workflow-logs/
+ReferenceData/

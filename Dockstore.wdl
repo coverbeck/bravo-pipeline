@@ -6,6 +6,7 @@ workflow bravoDataPrep {
     String lofOptions
     File refDir
     File refFasta
+    File cadScores
 
     call computeAlleleCountsAndHistograms {
         input: inputVCF = inputVCF,
@@ -18,6 +19,10 @@ workflow bravoDataPrep {
             bufferSize = bufferSize,
             refDir = refDir,
             refFasta = refFasta
+    }
+    call annotateVCF {
+        input: inputVCF = variantEffectPredictor.out,
+            cadScores = cadScores
     }
 }
 
