@@ -4,7 +4,7 @@ workflow bravoDataPrep {
     File samplesFile
     Int bufferSize
     String assembly
-    String options
+    String lofOptions
     File refDir
     File refFasta
 
@@ -15,7 +15,7 @@ workflow bravoDataPrep {
     call variantEffectPredictor {
         input: inputVCF = computeAlleleCountsAndHistograms.out,
             assembly = assembly,
-            options = options,
+            lofOptions = lofOptions,
             bufferSize = bufferSize,
             refDir = refDir,
             refFasta = refFasta
@@ -43,14 +43,14 @@ task  variantEffectPredictor {
 
     File inputVCF
     String assembly
-    String options
+    String lofOptions
     Int bufferSize
     File refDir
     File refFasta
 
     command {
         vep -i ${inputVCF} \
-        --plugin LoF,${options} \
+        --plugin LoF,${lofOptions} \
         --dir_cache ${refDir} \
         --fasta ${refFasta} \
         --assembly ${assembly} \

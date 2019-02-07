@@ -26,7 +26,9 @@ RUN pip install cget
 
 WORKDIR ${SRC_DIR}
 COPY . ${SRC_DIR}
+RUN pip install -r requirements.txt
 WORKDIR ${SRC_DIR}/DataPrep
 RUN cget install .
+WORKDIR ${SRC_DIR}
 
 ENV PATH="${SRC_DIR}/DataPrep/cget/bin:${PATH}"
