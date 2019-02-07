@@ -1,5 +1,4 @@
 workflow bravoDataPrep {
-
     File inputVCF
     File samplesFile
     Int bufferSize
@@ -23,7 +22,6 @@ workflow bravoDataPrep {
 }
 
 task computeAlleleCountsAndHistograms {
-
     File inputVCF
     File samplesFile
 
@@ -34,13 +32,12 @@ task computeAlleleCountsAndHistograms {
         File out = "test.vcf.gz"
     }
     runtime {
-        docker: 'statgen/bravo-pipeline:latest'
+        docker: "statgen/bravo-pipeline:latest"
     }
 
 }
 
 task  variantEffectPredictor {
-
     File inputVCF
     String assembly
     String lofOptions
@@ -81,14 +78,30 @@ task  variantEffectPredictor {
         --no_stats \
         -o vep-out.gz
     }
-
     output {
         File out = "vep-out.gz"
     }
     runtime {
-        docker: 'ensemblorg/ensembl-vep:release_95.1'
+        docker: "ensemblorg/ensembl-vep:release_95.1"
         cpu: "1"
         bootDiskSizeGb: "150"
     }
 
+}
+
+task annotateVCF {
+    File inputVCF
+    File cadScores
+
+    command {
+        /usr/bin/python add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o cad-out.vcf.gz
+    }
+    output {
+        File out = "cad-out.vcf.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "150"
+    }
 }
