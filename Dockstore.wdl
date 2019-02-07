@@ -99,7 +99,7 @@ task annotateVCF {
     File cadScores
 
     command {
-        /usr/bin/python add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o cad-out.vcf.gz
+        add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o cad-out.vcf.gz
     }
     output {
         File out = "cad-out.vcf.gz"
