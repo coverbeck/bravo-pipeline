@@ -10,4 +10,4 @@
 *.tbi
 cromwell-executions/
 cromwell-workflow-logs/
-inputTSV.txt
+ReferenceData/

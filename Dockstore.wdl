@@ -1,27 +1,24 @@
 workflow bravoDataPrep {
-    Boolean Offline
-    File InputVCF
-    File SamplesFile
-    Int BufferSize
-    String Assembly
+
+    File inputVCF
+    File samplesFile
+    Int bufferSize
+    String assembly
+    String options
+    File refDir
+    File refFasta
 
     call computeAlleleCountsAndHistograms {
-        input: inputVCF = InputVCF,
-            samplesFile = SamplesFile,
+        input: inputVCF = inputVCF,
+            samplesFile = samplesFile,
     }
-    if (Offline) {
-    call variantEffectPredictorOffline {
+    call variantEffectPredictor {
         input: inputVCF = computeAlleleCountsAndHistograms.out,
-            assembly = Assembly,
-            bufferSize = BufferSize,
-    }
-    }
-    if (!Offline) {
-        call variantEffectPredictor {
-            input: inputVCF = computeAlleleCountsAndHistograms.out,
-            assembly = Assembly,
-            bufferSize = BufferSize
-        }
+            assembly = assembly,
+            options = options,
+            bufferSize = bufferSize,
+            refDir = refDir,
+            refFasta = refFasta
     }
 }
 
@@ -42,14 +39,20 @@ task computeAlleleCountsAndHistograms {
 
 }
 
-task  variantEffectPredictorOffline {
+task  variantEffectPredictor {
 
     File inputVCF
     String assembly
+    String options
     Int bufferSize
+    File refDir
+    File refFasta
 
     command {
         vep -i ${inputVCF} \
+        --plugin LoF,${options} \
+        --dir_cache ${refDir} \
+        --fasta ${refFasta} \
         --assembly ${assembly} \
         --cache \
         --offline \
@@ -78,69 +81,14 @@ task  variantEffectPredictorOffline {
         --no_stats \
         -o vep-out.gz
     }
-# Need to change the output from the File type to a string
-    output {
-        File out = "vep-out.gz"
-    }
-    runtime {
-        docker: 'ensemblorg/ensembl-vep:release_95.1'
-    }
-
-}
-
-task  variantEffectPredictor {
-
-    File inputVCF
-    String assembly
-    Int bufferSize
-
-    command {
-        vep -i ${inputVCF} \
-        --assembly ${assembly} \
-        --vcf \
-        --sift b \
-        --database \
-        --polyphen b \
-        --ccds \
-        --uniprot \
-        --hgvs \
-        --symbol \
-        --numbers \
-        --domains \
-        --regulatory \
-        --canonical \
-        --protein \
-        --biotype \
-        --af \
-        --shift_hgvs 0 \
-        --allele_number \
-        --format vcf \
-        --force \
-        --buffer_size ${bufferSize} \
-        --compress_output gzip \
-        --no_stats \
-        -o vep-out.gz
-    }
 
     output {
         File out = "vep-out.gz"
     }
     runtime {
         docker: 'ensemblorg/ensembl-vep:release_95.1'
-    }
-
-}
-
-task annotateVCF {
-
-    command {
-
-    }
-    output {
-
-    }
-    runtime {
-        docker: 'statgen/bravo-pipeline:latest'
+        cpu: "1"
+        bootDiskSizeGb: "150"
     }
 
 }
