@@ -13,9 +13,6 @@ workflow bravoDataPrep {
     # Prepare percentiles #
     String infoField
     Int threads
-    Int minMAF
-    Int maxMAF
-    Int alleleCount
     Int numberPercentiles
     String description
     String outputPrefix
@@ -149,9 +146,6 @@ task computePercentiles {
     File inputVCF
     String infoField
     Int threads
-    Int minMAF
-    Int maxMAF
-    Int alleleCount
     Int numberPercentiles
     String description
     String outputPrefix
@@ -160,9 +154,6 @@ task computePercentiles {
         ComputePercentiles -i ${inputVCF} \
         -m ${infoField} \
         -t ${threads} \
-        -f ${minMAF} \
-        -F ${maxMAF} \
-        -a ${alleleCount} \
         -p ${numberPercentiles} \
         -d ${description} \
         -o ${outputPrefix}
