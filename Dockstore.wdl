@@ -1,4 +1,5 @@
 workflow bravoDataPrep {
+    # Prepare VCF #
     File inputVCF
     File samplesFile
     Int bufferSize
@@ -8,6 +9,20 @@ workflow bravoDataPrep {
     File refFasta
     File cadScores
     File cadIndex
+
+    # Prepare percentiles #
+    String infoField
+    Int threads
+    Int minMAF
+    Int maxMAF
+    Int alleleCount
+    Int numberPercentiles
+    String description
+    String outputPrefix
+
+    ###############
+    # Prepare VCF #
+    ###############
 
     call computeAlleleCountsAndHistograms {
         input: inputVCF = inputVCF,
@@ -21,10 +36,26 @@ workflow bravoDataPrep {
             refDir = refDir,
             refFasta = refFasta
     }
-    call annotateVCF {
+    call addCaddScores {
         input: inputVCF = variantEffectPredictor.out,
             cadScores = cadScores,
             cadIndex = cadIndex
+    }
+
+    #######################
+    # Prepare percentiles #
+    #######################
+
+    call computePercentiles {
+        input: inputVCF = addCaddScores.out,
+            infoField = infoField,
+            threads = threads,
+            minMAF = minMAF,
+            maxMAF = maxMAF,
+            alleleCount = alleleCount,
+            numberPercentiles = numberPercentiles,
+            description = description,
+            outputPrefix = outputPrefix
     }
 }
 
@@ -33,10 +64,10 @@ task computeAlleleCountsAndHistograms {
     File samplesFile
 
     command {
-        ComputeAlleleCountsAndHistograms -i ${inputVCF} -s ${samplesFile} -o test.vcf.gz
+        ComputeAlleleCountsAndHistograms -i ${inputVCF} -s ${samplesFile} -o computeAlleleCtHst.vcf.gz
     }
     output {
-        File out = "test.vcf.gz"
+        File out = "computeAlleleCtHst.vcf.gz"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
@@ -83,10 +114,10 @@ task  variantEffectPredictor {
         --buffer_size ${bufferSize} \
         --compress_output bgzip \
         --no_stats \
-        -o vep-out.gz
+        -o variantEP.vcf.gz
     }
     output {
-        File out = "vep-out.gz"
+        File out = "variantEP.vcf.gz"
     }
     runtime {
         docker: "ensemblorg/ensembl-vep:release_95.1"
@@ -96,20 +127,53 @@ task  variantEffectPredictor {
 
 }
 
-task annotateVCF {
+task addCaddScores {
     File inputVCF
     File cadScores
     File cadIndex
 
     command {
-        add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o cad-out.vcf.gz
+        add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o annotated.vcf.gz
     }
     output {
-        File out = "cad-out.vcf.gz"
+        File out = "annotated.vcf.gz"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
         cpu: "1"
+        bootDiskSizeGb: "150"
+    }
+}
+
+task computePercentiles {
+    File inputVCF
+    String infoField
+    Int threads
+    Int minMAF
+    Int maxMAF
+    Int alleleCount
+    Int numberPercentiles
+    String description
+    String outputPrefix
+
+    command {
+        ComputePercentiles -i ${inputVCF} \
+        -m ${infoField} \
+        -t ${threads} \
+        -f ${minMAF} \
+        -F ${maxMAF} \
+        -a ${alleleCount} \
+        -p ${numberPercentiles} \
+        -d ${description} \
+        -o ${outputPrefix}
+    }
+    output {
+        File outAllPercentiles = "${outputPrefix}.all_percentiles.json.gz"
+        File outVariantPercentile = "${outputPrefix}.variant_percentile.vcf.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: threads
         bootDiskSizeGb: "150"
     }
 }
