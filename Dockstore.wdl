@@ -47,9 +47,6 @@ workflow bravoDataPrep {
         input: inputVCF = addCaddScores.out,
             infoField = infoField,
             threads = threads,
-            minMAF = minMAF,
-            maxMAF = maxMAF,
-            alleleCount = alleleCount,
             numberPercentiles = numberPercentiles,
             description = description,
             outputPrefix = outputPrefix
