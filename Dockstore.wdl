@@ -7,6 +7,7 @@ workflow bravoDataPrep {
     File refDir
     File refFasta
     File cadScores
+    File cadIndex
 
     call computeAlleleCountsAndHistograms {
         input: inputVCF = inputVCF,
@@ -22,7 +23,8 @@ workflow bravoDataPrep {
     }
     call annotateVCF {
         input: inputVCF = variantEffectPredictor.out,
-            cadScores = cadScores
+            cadScores = cadScores,
+            cadIndex = cadIndex
     }
 }
 
@@ -79,7 +81,7 @@ task  variantEffectPredictor {
         --format vcf \
         --force \
         --buffer_size ${bufferSize} \
-        --compress_output gzip \
+        --compress_output bgzip \
         --no_stats \
         -o vep-out.gz
     }
@@ -97,6 +99,7 @@ task  variantEffectPredictor {
 task annotateVCF {
     File inputVCF
     File cadScores
+    File cadIndex
 
     command {
         add_cadd_scores.py -i ${inputVCF} -c ${cadScores} -o cad-out.vcf.gz
