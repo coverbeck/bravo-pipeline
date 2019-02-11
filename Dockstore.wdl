@@ -11,7 +11,7 @@ workflow bravoDataPrep {
     File cadIndex
 
     # Prepare percentiles #
-    String infoField
+    Array[String] infoField
     Int threads
     Int numberPercentiles
     String description
@@ -42,10 +42,10 @@ workflow bravoDataPrep {
     # Prepare percentiles #
     #######################
 
-    scatter (x in infoField) {
+    scatter (field in infoField) {
         call computePercentiles {
             input: inputVCF = addCaddScores.out,
-                infoField = infoField,
+                infoField = field,
                 threads = threads,
                 numberPercentiles = numberPercentiles,
                 description = description
