@@ -171,9 +171,9 @@ task computePercentiles {
 task indexVCF {
     File variantPercentileVCF
 
-    command <<<
-        find . -maxdepth 1 -name ${variantPercentileVCF} -exec tabix {} \;
-    >>>
+    command {
+        tabix ${variantPercentileVCF}
+    }
     output {
         File out = "${variantPercentileVCF}.tbi"
     }
