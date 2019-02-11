@@ -15,7 +15,6 @@ workflow bravoDataPrep {
     Int threads
     Int numberPercentiles
     String description
-    String outputPrefix
 
     ###############
     # Prepare VCF #
@@ -43,13 +42,14 @@ workflow bravoDataPrep {
     # Prepare percentiles #
     #######################
 
-    call computePercentiles {
-        input: inputVCF = addCaddScores.out,
-            infoField = infoField,
-            threads = threads,
-            numberPercentiles = numberPercentiles,
-            description = description,
-            outputPrefix = outputPrefix
+    scatter (x in infoField) {
+        call computePercentiles {
+            input: inputVCF = addCaddScores.out,
+                infoField = infoField,
+                threads = threads,
+                numberPercentiles = numberPercentiles,
+                description = description
+        }
     }
 }
 
@@ -145,7 +145,6 @@ task computePercentiles {
     Int threads
     Int numberPercentiles
     String description
-    String outputPrefix
 
     command {
         ComputePercentiles -i ${inputVCF} \
@@ -153,15 +152,46 @@ task computePercentiles {
         -t ${threads} \
         -p ${numberPercentiles} \
         -d ${description} \
-        -o ${outputPrefix}
+        -o ${infoField}
     }
     output {
-        File outAllPercentiles = "${outputPrefix}.all_percentiles.json.gz"
-        File outVariantPercentile = "${outputPrefix}.variant_percentile.vcf.gz"
+        File outAllPercentiles = "${infoField}.all_percentiles.json.gz"
+        File outVariantPercentile = "${infoField}.variant_percentile.vcf.gz"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
         cpu: threads
         bootDiskSizeGb: "150"
     }
+}
+
+task indexVCF {
+    File variantPercentileVCF
+
+    command <<<
+        find . -maxdepth 1 -name ${variantPercentileVCF} -exec tabix {} \;
+    >>>
+    output {
+        File out = "${variantPercentileVCF}.tbi"
+    }
+
+}
+
+task addPercentiles {
+    File inputVCF
+    File inputVCFIndex
+    Array[String] variantPercentiles
+
+    command {
+        add_percentiles.py -i ${inputVCF} -p ${sep=' ' variantPercentiles} -o percentiles.vcf.gz
+    }
+    output {
+        File out = "percentiles.vcf.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "150"
+    }
+
 }
