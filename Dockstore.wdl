@@ -50,9 +50,6 @@ workflow bravoDataPrep {
                 numberPercentiles = numberPercentiles,
                 description = description
         }
-        call indexVCF {
-            input: variantPercentileVCF = computePercentiles.outVariantPercentile
-        }
     }
 }
 
@@ -162,7 +159,7 @@ task computePercentiles {
     output {
         File outAllPercentiles = "${infoField}.all_percentiles.json.gz"
         File outVariantPercentile = "${infoField}.variant_percentile.vcf.gz"
-        File outIndexedVariantPercentile = "${infoField}.variant_percentile.vcf.tbi"
+        File outIndexedVariantPercentile = "${infoField}.variant_percentile.vcf.gz.tbi"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
