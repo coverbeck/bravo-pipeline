@@ -149,40 +149,26 @@ task computePercentiles {
     Int numberPercentiles
     String description
 
-    command {
+    command <<<
         ComputePercentiles -i ${inputVCF} \
         -m ${infoField} \
         -t ${threads} \
         -p ${numberPercentiles} \
         -d ${description} \
         -o ${infoField}
-    }
+
+        tabix ${infoField}.variant_percentile.vcf.gz
+    >>>
     output {
         File outAllPercentiles = "${infoField}.all_percentiles.json.gz"
         File outVariantPercentile = "${infoField}.variant_percentile.vcf.gz"
+        File outIndexedVariantPercentile = "${infoField}.variant_percentile.vcf.tbi"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
         cpu: threads
         bootDiskSizeGb: "150"
     }
-}
-
-task indexVCF {
-    File variantPercentileVCF
-
-    command {
-        tabix ${variantPercentileVCF}
-    }
-    output {
-        File out = "${variantPercentileVCF}.tbi"
-    }
-    runtime {
-        docker: "statgen/bravo-pipeline:latest"
-        cpu: "1"
-        bootDiskSizeGb: "150"
-    }
-
 }
 
 task addPercentiles {
