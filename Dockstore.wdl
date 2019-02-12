@@ -51,6 +51,12 @@ workflow bravoDataPrep {
                 description = description
         }
     }
+    call addPercentiles {
+        input: inputVCF = addCaddScores.out,
+            inputVCFIndex = computePercentiles.outVariantPercentileIndex,
+            variantPercentiles = computePercentiles.outVariantPercentile
+
+    }
 }
 
 task computeAlleleCountsAndHistograms {
@@ -159,7 +165,7 @@ task computePercentiles {
     output {
         File outAllPercentiles = "${infoField}.all_percentiles.json.gz"
         File outVariantPercentile = "${infoField}.variant_percentile.vcf.gz"
-        File outIndexedVariantPercentile = "${infoField}.variant_percentile.vcf.gz.tbi"
+        File outVariantPercentileIndex = "${infoField}.variant_percentile.vcf.gz.tbi"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
@@ -170,8 +176,8 @@ task computePercentiles {
 
 task addPercentiles {
     File inputVCF
-    File inputVCFIndex
-    Array[String] variantPercentiles
+    Array[File] inputVCFIndex
+    Array[File] variantPercentiles
 
     command {
         add_percentiles.py -i ${inputVCF} -p ${sep=' ' variantPercentiles} -o percentiles.vcf.gz
