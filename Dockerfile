@@ -2,6 +2,7 @@ FROM ensemblorg/ensembl-vep
 
 ENV SRC_DIR /srv/data
 ENV SCRIPTS ${SRC_DIR}/scripts
+ENV SAMTOOLS_RELEASE 1.9
 
 # Configure VEP with plugins needed for BRAVO
 USER vep
@@ -17,6 +18,7 @@ RUN set -x \
         libbz2-dev \
         libcurl4-gnutls-dev \
         liblzma-dev \
+        libncurses5-dev \
         libssl-dev \
         python \
         python-pip \
@@ -35,6 +37,13 @@ RUN chmod +x *
 WORKDIR ${SRC_DIR}/DataPrep
 RUN cget install .
 WORKDIR ${SRC_DIR}
+
+# Install samtools
+RUN curl -L -o /tmp/samtools-$SAMTOOLS_RELEASE.tar.bz2 https://github.com/samtools/samtools/releases/download/1.9/samtools-$SAMTOOLS_RELEASE.tar.bz2 \
+    && tar -xvjf /tmp/samtools-$SAMTOOLS_RELEASE.tar.bz2 -C /tmp \
+    && /tmp/samtools-${SAMTOOLS_RELEASE}/./configure \
+    && make -j5 -C /tmp/samtools-${SAMTOOLS_RELEASE} \
+    && make install -C /tmp/samtools-${SAMTOOLS_RELEASE}
 
 ENV PATH="${SRC_DIR}/DataPrep/cget/bin:${PATH}"
 ENV PATH="${SCRIPTS}:${PATH}"
