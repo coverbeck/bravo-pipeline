@@ -213,14 +213,14 @@ task extractDepth {
     File referenceFasta
     String sample = basename(inputCramFile, ".bam")
 
-    command <<<
+    command {
         samtools view -q 20 -F 0x0704 -uh ${inputCramFile} ${chromosome} | \
         samtools calmd -uAEr - ${referenceFasta} | \
         bam clipOverlap --in -.ubam --out -.ubam | \
         samtools mpileup -f ${referenceFasta} -Q 20 -t DP - | \
         cut -f1-4 | \
         bgzip > ${chromosome}.${sample}.depth.gz
-    >>>
+    }
     output {
         File out = "${chromosome}.${sample}.depth.gz"
     }
