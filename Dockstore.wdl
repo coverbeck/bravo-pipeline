@@ -219,10 +219,12 @@ task extractDepth {
         bam clipOverlap --in -.ubam --out -.ubam | \
         samtools mpileup -f ${referenceFasta} -Q 20 -t DP - | \
         cut -f1-4 | \
-        bgzip > ${chromosome}.${sample}.depth.gz
+        bgzip > ${chromosome}.${sample}.depth.gz \
+        && tabix ${chromosome}.${sample}.depth.gz
     }
     output {
-        File out = "${chromosome}.${sample}.depth.gz"
+        File outDepth = "${chromosome}.${sample}.depth.gz"
+        File outIndex = "${chromosome}.${sample}.depth.gz.tbi"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
@@ -230,3 +232,4 @@ task extractDepth {
         bootDiskSizeGb: "50"
     }
 }
+
