@@ -16,6 +16,10 @@ workflow bravoDataPrep {
     Int numberPercentiles
     String description
 
+    # Prepare Coverage #
+    File inputCramFile
+    Int chromosome
+
     ###############
     # Prepare VCF #
     ###############
@@ -56,6 +60,16 @@ workflow bravoDataPrep {
             inputVCFIndex = computePercentiles.outVariantPercentileIndex,
             variantPercentiles = computePercentiles.outVariantPercentile
 
+    }
+
+    ####################
+    # Prepare Coverage #
+    ####################
+
+    call extractDepth {
+        input: inputCramFile = inputCramFile,
+            chromosome = chromosome,
+            referenceFasta = refFasta
     }
 }
 
@@ -191,4 +205,28 @@ task addPercentiles {
         bootDiskSizeGb: "150"
     }
 
+}
+
+task extractDepth {
+    File inputCramFile
+    Int chromosome
+    File referenceFasta
+    String sample = basename(inputCramFile, ".bam")
+
+    command <<<
+        samtools view -q 20 -F 0x0704 -uh ${inputCramFile} ${chromosome} | \
+        samtools calmd -uAEr - ${referenceFasta} | \
+        bam clipOverlap --in -.ubam --out -.ubam | \
+        samtools mpileup -f ${referenceFasta} -Q 20 -t DP - | \
+        cut -f1-4 | \
+        bgzip > ${chromosome}.${sample}.depth.gz
+    >>>
+    output {
+        File out = "${chromosome}.${sample}.depth.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "50"
+    }
 }
