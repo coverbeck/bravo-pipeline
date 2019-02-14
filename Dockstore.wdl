@@ -17,7 +17,7 @@ workflow bravoDataPrep {
     String description
 
     # Prepare Coverage #
-    File inputCramFile
+    Array[File] inputCramFiles
     Int chromosome
 
     ###############
@@ -66,10 +66,12 @@ workflow bravoDataPrep {
     # Prepare Coverage #
     ####################
 
-    call extractDepth {
-        input: inputCramFile = inputCramFile,
+    scatter (file in inputCramFiles) {
+        call extractDepth {
+            input: inputCramFile = file,
             chromosome = chromosome,
-            referenceFasta = refFasta
+            refFasta = refFasta
+        }
     }
 }
 
@@ -210,14 +212,14 @@ task addPercentiles {
 task extractDepth {
     File inputCramFile
     Int chromosome
-    File referenceFasta
+    File refFasta
     String sample = basename(inputCramFile, ".bam")
 
     command {
         samtools view -q 20 -F 0x0704 -uh ${inputCramFile} ${chromosome} | \
-        samtools calmd -uAEr - ${referenceFasta} | \
+        samtools calmd -uAEr - ${refFasta} | \
         bam clipOverlap --in -.ubam --out -.ubam | \
-        samtools mpileup -f ${referenceFasta} -Q 20 -t DP - | \
+        samtools mpileup -f ${refFasta} -Q 20 -t DP - | \
         cut -f1-4 | \
         bgzip > ${chromosome}.${sample}.depth.gz \
         && tabix ${chromosome}.${sample}.depth.gz
