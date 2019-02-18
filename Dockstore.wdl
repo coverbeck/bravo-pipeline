@@ -235,3 +235,23 @@ task extractDepth {
     }
 }
 
+task aggrBasePair {
+    Array[File] inputFiles
+    Int chromosome
+    # Not splitting by BP for now
+    Int startBP = 0
+    Int endBP = 999999999
+
+    command {
+        create_coverage.py -i ${write_lines(inputFiles)} aggregate -c ${chromosome} -s ${startBP} -e ${endBP} | \
+        bgzip -c > ${chromosome}.${startBP}.${endBP}.json.gz
+    }
+    output {
+        File outAggrBasePair = "${chromosome}.${startBP}.${endBP}.json.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "50"
+    }
+}
