@@ -20,6 +20,9 @@ workflow bravoDataPrep {
     Array[File] inputCramFiles
     Int chromosome
 
+    # Prepare CRAM #
+    File sampleLocationFile
+
     ###############
     # Prepare VCF #
     ###############
@@ -76,6 +79,19 @@ workflow bravoDataPrep {
     call aggrBasePair {
         input: inputFiles = extractDepth.outDepth,
             chromosome = chromosome
+    }
+
+    ################
+    # Prepare Cram #
+    ################
+
+    call extractId {
+        input: inputVCF = inputVCF,
+            samplesFile = samplesFile
+    }
+    call prepareSequences {
+        input: inputVCF = inputVCF,
+            sampleLocationFile = sampleLocationFile
     }
 }
 
@@ -244,7 +260,7 @@ task aggrBasePair {
     Int chromosome
     # Not splitting by BP for now
     Int startBP = 0
-    Int endBP = 999999999
+    Int endBP = 999999999999999999
 
     command {
         create_coverage.py -i ${write_lines(inputFiles)} aggregate -c ${chromosome} -s ${startBP} -e ${endBP} | \
@@ -252,6 +268,41 @@ task aggrBasePair {
     }
     output {
         File outAggrBasePair = "${chromosome}.${startBP}.${endBP}.json.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "50"
+    }
+}
+
+task extractId {
+    File inputVCF
+    File samplesFile
+    String sample = basename(inputVCF, ".vcf.gz")
+
+    command {
+        RandomHetHom -k 5 -e 1985 -i ${inputVCF} -s ${samplesFile} -o sample.vcf.gz
+    }
+    output {
+        File out = "${sample}.vcf.gz"
+    }
+    runtime {
+        docker: "statgen/bravo-pipeline:latest"
+        cpu: "1"
+        bootDiskSizeGb: "50"
+    }
+}
+
+tast prepareSequences {
+    File inputVCF
+    File sampleLocationFile
+
+    command {
+        prepare_sequences.py cram -i ${inputVCF} -c ${sampleLocationFile} -w 100 -o combined.cram
+    }
+    output {
+        File out = "combined.cram"
     }
     runtime {
         docker: "statgen/bravo-pipeline:latest"
