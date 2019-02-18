@@ -16,6 +16,7 @@ RUN set -x \
     && apt-get update && apt-get install -y \
         build-essential \
         cmake \
+        git \
         libbz2-dev \
         libcurl4-gnutls-dev \
         liblzma-dev \
