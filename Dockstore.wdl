@@ -89,10 +89,10 @@ workflow bravoDataPrep {
         input: inputVCF = inputVCF,
             samplesFile = samplesFile
     }
- # call prepareSequences {
-    #     input: inputVCF = inputVCF,
-    #         sampleLocationFile = sampleLocationFile
-    # }
+    call prepareSequences {
+        input: inputVCF = inputVCF,
+            sampleLocationFile = sampleLocationFile
+    }
 }
 
 task computeAlleleCountsAndHistograms {
@@ -282,7 +282,7 @@ task extractId {
     String sample = basename(inputVCF, ".vcf.gz")
 
     command {
-        RandomHetHom -k 5 -e 1985 -i ${inputVCF} -s ${samplesFile} -o sample.vcf.gz
+        RandomHetHom -k 5 -e 1985 -i ${inputVCF} -s ${samplesFile} -o ${sample}.vcf.gz
     }
     output {
         File out = "${sample}.vcf.gz"
