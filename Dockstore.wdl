@@ -73,6 +73,10 @@ workflow bravoDataPrep {
             refFasta = refFasta
         }
     }
+    call aggrBasePair {
+        input: inputFiles = extractDepth.outDepth,
+            chromosome = chromosome
+    }
 }
 
 task computeAlleleCountsAndHistograms {
