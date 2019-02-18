@@ -1,4 +1,4 @@
-FROM ensemblorg/ensembl-vep
+FROM ensemblorg/ensembl-vep:latest
 
 ENV SRC_DIR /srv/data
 ENV SCRIPTS ${SRC_DIR}/scripts
