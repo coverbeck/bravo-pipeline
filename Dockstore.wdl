@@ -89,10 +89,10 @@ workflow bravoDataPrep {
         input: inputVCF = inputVCF,
             samplesFile = samplesFile
     }
-    call prepareSequences {
-        input: inputVCF = inputVCF,
-            sampleLocationFile = sampleLocationFile
-    }
+ # call prepareSequences {
+    #     input: inputVCF = inputVCF,
+    #         sampleLocationFile = sampleLocationFile
+    # }
 }
 
 task computeAlleleCountsAndHistograms {
@@ -260,7 +260,7 @@ task aggrBasePair {
     Int chromosome
     # Not splitting by BP for now
     Int startBP = 0
-    Int endBP = 999999999999999999
+    Int endBP = 999999999
 
     command {
         create_coverage.py -i ${write_lines(inputFiles)} aggregate -c ${chromosome} -s ${startBP} -e ${endBP} | \
@@ -294,7 +294,7 @@ task extractId {
     }
 }
 
-tast prepareSequences {
+task prepareSequences {
     File inputVCF
     File sampleLocationFile
 
