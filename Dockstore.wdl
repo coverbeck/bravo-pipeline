@@ -297,6 +297,7 @@ task extractId {
 task prepareSequences {
     File inputVCF
     File sampleLocationFile
+    Array[Array[String]] sampleFiles = read_tsv(sampleLocationFile)
 
     command {
         prepare_sequences.py cram -i ${inputVCF} -c ${sampleLocationFile} -w 100 -o combined.cram
