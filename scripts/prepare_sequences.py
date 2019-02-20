@@ -20,7 +20,8 @@ def parse_args():
 
     bam_file_parser = subparsers.add_parser('cram', help='Generates CRAM file with sequences from heterozygous/homozygous samples.')
     bam_file_parser.add_argument('-i', '--in', metavar='file', dest='input_file', required=True, help='Input compressed VCF with HET and HOM INFO fields. Multi-allelic variants must be split into bi-allelic entries.')
-    bam_file_parser.add_argument('-c', '--crams', metavar='file', dest='input_crams', required=True, help='Input file with sample name and CRAM file path per line.')
+    # bam_file_parser.add_argument('-c', '--crams', metavar='file', dest='input_crams', required=True, help='Input file with sample name and CRAM file path per line.')
+    bam_file_parser.add_argument('-c', '--crams', metavar='/file/path/sample2 /file/path/sample2', dest='input_crams', required=True, nargs='*', help='Input paths to sample files seperated by space.')
     bam_file_parser.add_argument('-w', '--window', metavar='base-pair', dest='window', type=int, required=False, default=100, help='Window size around each variant in base-pairs.')
     bam_file_parser.add_argument('-o', '--out', metavar='file', dest='output_file', required=True, help='Unsorted output CRAM file.')
     return parser.parse_args()
@@ -66,19 +67,19 @@ def main():
         for sample in unique_samples:
             sys.stdout.write('{}\n'.format(sample))
     elif args.command == 'cram':
-        crams = dict()
         header = {'HD': {'SO': 'coordinate', 'VN': '1.3'}, 'SQ': [], 'RG': []}
 
-        with open(args.input_crams, 'r') as ifile:
-            for line in ifile:
-                fields = line.rstrip().split()
-                if len(fields) >= 2:
-                    sample_id = fields[0].strip()
-                    cram_path = fields[1].strip()
-                    if os.path.isfile(cram_path):
-                        crams[sample_id] = cram_path
-                    else:
-                        sys.stdout.write('CRAM "{}" for "{}" was not found.\n'.format(cram_path, sample_id))
+        # with open(args.input_crams, 'r') as ifile:
+        #     for line in ifile:
+        #         fields = line.rstrip().split()
+        #         if len(fields) >= 2:
+        #             sample_id = fields[0].strip()
+        #             cram_path = fields[1].strip()
+        #             if os.path.isfile(cram_path):
+        #                 crams[sample_id] = cram_path
+        #             else:
+        #                 sys.stdout.write('CRAM "{}" for "{}" was not found.\n'.format(cram_path, sample_id))
+        crams = dict((os.path.basename(n), n) for n in args.input_crams)
 
         if len(crams) == 0:
             sys.exit(0)
