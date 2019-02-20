@@ -79,7 +79,7 @@ def main():
         #                 crams[sample_id] = cram_path
         #             else:
         #                 sys.stdout.write('CRAM "{}" for "{}" was not found.\n'.format(cram_path, sample_id))
-        crams = dict((os.path.basename(n), n) for n in args.input_crams)
+        crams = dict((os.path.basename(n), n) for n in args.input_crams if os.path.isfile(n))
 
         if len(crams) == 0:
             sys.exit(0)

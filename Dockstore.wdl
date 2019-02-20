@@ -297,10 +297,10 @@ task extractId {
 task prepareSequences {
     File inputVCF
     File sampleLocationFile
-    Array[Array[String]] sampleFiles = read_tsv(sampleLocationFile)
+    Array[File] samplePaths = read_lines(sampleLocationFile)
 
     command {
-        prepare_sequences.py cram -i ${inputVCF} -c ${sampleLocationFile} -w 100 -o combined.cram
+        prepare_sequences.py cram -i ${inputVCF} -c ${sep=' ' samplePaths} -w 100 -o combined.cram
     }
     output {
         File out = "combined.cram"
