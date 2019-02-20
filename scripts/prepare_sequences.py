@@ -82,7 +82,7 @@ def main():
         crams = dict((os.path.basename(n), n) for n in args.input_crams if os.path.isfile(n))
 
         if len(crams) == 0:
-            sys.exit(0)
+            sys.exit(1)
 
         samples = dict()
 

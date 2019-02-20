@@ -297,7 +297,10 @@ task extractId {
 task prepareSequences {
     File inputVCF
     File sampleLocationFile
-    Array[File] samplePaths = read_lines(sampleLocationFile)
+
+    # Need to read files into WDL task scope as well as get strings for command
+    Array[File] sampleFiles = read_lines(sampleLocationFile)
+    Array[String] samplePaths = read_lines(sampleLocationFile)
 
     command {
         prepare_sequences.py cram -i ${inputVCF} -c ${sep=' ' samplePaths} -w 100 -o combined.cram
