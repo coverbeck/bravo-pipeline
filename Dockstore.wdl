@@ -22,6 +22,7 @@ workflow bravoDataPrep {
 
     # Prepare CRAM #
     File sampleLocationFile
+    File sampleIndexLocationFile
 
     ###############
     # Prepare VCF #
@@ -91,7 +92,8 @@ workflow bravoDataPrep {
     }
     call prepareSequences {
         input: inputVCF = inputVCF,
-            sampleLocationFile = sampleLocationFile
+            sampleLocationFile = sampleLocationFile,
+            sampleIndexLocationFile = sampleIndexLocationFile
     }
 }
 
@@ -297,13 +299,14 @@ task extractId {
 task prepareSequences {
     File inputVCF
     File sampleLocationFile
+    File sampleIndexLocationFile
 
-    # Need to read files into WDL task scope as well as get strings for command
+    # Need to read index and bam files into WDL task scope 
     Array[File] sampleFiles = read_lines(sampleLocationFile)
-    Array[String] samplePaths = read_lines(sampleLocationFile)
+    Array[File] sampleFilesIndex = read_lines(sampleIndexLocationFile)
 
     command {
-        prepare_sequences.py cram -i ${inputVCF} -c ${sep=' ' samplePaths} -w 100 -o combined.cram
+        prepare_sequences.py cram -i ${inputVCF} -c ${sep=' ' sampleFiles} -w 100 -o combined.cram
     }
     output {
         File out = "combined.cram"
