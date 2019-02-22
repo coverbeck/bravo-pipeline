@@ -5,7 +5,8 @@ import "coveragePreparation.wdl" as coveragePreparation
 workflow mainWorkflow {
     ### Shared Inputs ###
     # Array of input chromosome VCF files read from .txt file
-    Array[File] inputChromosomes = read_lines()
+    File inputChromosomesList
+    Array[File] inputChromosomes = read_lines(inputChromosomesList)
     File referenceFasta
     File referenceDir
     File samplesFile
