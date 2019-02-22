@@ -27,8 +27,6 @@ workflow mainWorkflow {
 
     ### Prepare Coverage Inputs ###
     Array[File] inputCramFiles
-    Int chromosome
-
 
     scatter (chromosome in inputChromosomes) {
         call vcfPercentilesPreparation.prepareVCFPercentiles {
@@ -40,7 +38,11 @@ workflow mainWorkflow {
                 referenceDir = referenceDir,
                 referenceFasta = referenceFasta,
                 cadScores = cadScores,
-                cadScoresIndex = cadScoresIndex
+                cadScoresIndex = cadScoresIndex,
+                infoFields = infoFields,
+                threads = threads,
+                numberPercentiles = numberPercentiles,
+                description = description
         }
         call cramPreparation.prepareCram {
             input: chromosomeVCF = chromosome,
