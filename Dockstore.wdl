@@ -62,6 +62,6 @@ workflow mainWorkflow {
     meta {
         author: "Jacob Pleiness"
         email: "pleiness@umich.edu"
-        description: "Data preperation pipeline for BRAVO"
+        description: "Data preperation pipeline for BRAVO https://github.com/statgen/bravo-pipeline"
     }
 }
