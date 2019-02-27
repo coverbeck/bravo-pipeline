@@ -1,0 +1,24 @@
+{
+  "mainWorkflow.referenceDir": "ReferenceData",
+  "mainWorkflow.cadScores": "ReferenceData/whole_genome_SNVs.tsv.gz",
+  "mainWorkflow.inputChromosomesList": "ReferenceData/inputChromosomesList.txt",
+  "mainWorkflow.samplesFile": "ReferenceData/exampleSamplesFile",
+  "mainWorkflow.referenceFasta": "ReferenceData/Homo_sapiens.GRCh38.dna.toplevel.fa",
+  "mainWorkflow.sampleIndexLocationFile": "ReferenceData/samples-bai.txt",
+  "mainWorkflow.cadScoresIndex": "ReferenceData/whole_genome_SNVs.tsv.gz.tbi",
+  "mainWorkflow.sampleLocationFile": "ReferenceData/samples.txt",
+  "mainWorkflow.inputCramFiles": [
+    "ReferenceData/exampleInput.bam"
+  ],
+  "mainWorkflow.numberPercentiles": "10",
+  "mainWorkflow.threads": "10",
+  "mainWorkflow.chromosomeNum": "22",
+  "mainWorkflow.bufferSize": "100000",
+  "mainWorkflow.assembly": "GRCh38",
+  "mainWorkflow.infoFields": [
+    "AVGDP",
+    "DP"
+  ],
+  "mainWorkflow.description": "descriptive description",
+  "mainWorkflow.lofOptions": "conservation_file:false"
+}
