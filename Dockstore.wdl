@@ -28,6 +28,7 @@ workflow mainWorkflow {
 
     ### Prepare Coverage Inputs ###
     Array[File] inputCramFiles
+    Int chromosomeNum = 22
 
     scatter (chromosome in inputChromosomes) {
         call vcfPercentilesPreparation.prepareVCFPercentiles {
@@ -54,7 +55,7 @@ workflow mainWorkflow {
         call coveragePreparation.prepareCoverage {
             input: inputCramFiles = inputCramFiles,
                 #TODO - get chromosome number from VCF Filename
-                chromosome = 22,
+                chromosome = chromosomeNum,
                 referenceFasta = referenceFasta
         }
     }
