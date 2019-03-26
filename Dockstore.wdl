@@ -1,6 +1,6 @@
-import "vcfPercentilesPreparation.wdl" as vcfPercentilesPreparation
-import "cramPreparation.wdl" as cramPreparation
-import "coveragePreparation.wdl" as coveragePreparation
+import "https://raw.githubusercontent.com/statgen/bravo-pipeline/master/vcfPercentilesPreparation.wdl" as vcfPercentilesPreparation
+import "https://raw.githubusercontent.com/statgen/bravo-pipeline/master/cramPreparation.wdl" as cramPreparation
+import "https://raw.githubusercontent.com/statgen/bravo-pipeline/master/coveragePreparation.wdl" as coveragePreparation
 
 workflow mainWorkflow {
     ### Shared Inputs ###
