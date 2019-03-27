@@ -1,5 +1,5 @@
 {
-  "mainWorkflow.referenceDir": "https://console.cloud.google.com/storage/browser/topmed_workflow_testing/bravo/",
+  "mainWorkflow.referenceDir": "https://storage.cloud.google.com/storage/browser/topmed_workflow_testing/bravo/",
   "mainWorkflow.cadScores": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/whole_genome_SNVs.tsv.gz",
   "mainWorkflow.inputChromosomesList": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/inputChromosomesList.txt",
   "mainWorkflow.samplesFile": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/cah-samples.txt",
