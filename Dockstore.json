@@ -1,14 +1,14 @@
 {
-  "mainWorkflow.referenceDir": "https://storage.cloud.google.com/storage/browser/topmed_workflow_testing/bravo/",
-  "mainWorkflow.cadScores": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/whole_genome_SNVs.tsv.gz",
-  "mainWorkflow.inputChromosomesList": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/inputChromosomesList.txt",
-  "mainWorkflow.samplesFile": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/cah-samples.txt",
-  "mainWorkflow.referenceFasta": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/hs37d5.fa",
-  "mainWorkflow.sampleIndexLocationFile": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/samples-bai.txt",
-  "mainWorkflow.cadScoresIndex": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/whole_genome_SNVs.tsv.gz.tbi",
-  "mainWorkflow.sampleLocationFile": "https://storage.cloud.google.com/topmed_workflow_testing/bravo/samples.txt",
+  "mainWorkflow.referenceDir": "https://storage.googleapis.com/topmed_workflow_testing/bravo",
+  "mainWorkflow.cadScores": "https://storage.googleapis.com/topmed_workflow_testing/bravo/whole_genome_SNVs.tsv.gz",
+  "mainWorkflow.inputChromosomesList": "https://storage.googleapis.com/topmed_workflow_testing/bravo/inputChromosomesList.txt",
+  "mainWorkflow.samplesFile": "https://storage.googleapis.com/topmed_workflow_testing/bravo/cah-samples.txt",
+  "mainWorkflow.referenceFasta": "https://storage.googleapis.com/topmed_workflow_testing/bravo/hs37d5.fa",
+  "mainWorkflow.sampleIndexLocationFile": "https://storage.googleapis.com/topmed_workflow_testing/bravo/samples-bai.txt",
+  "mainWorkflow.cadScoresIndex": "https://storage.googleapis.com/topmed_workflow_testing/bravo/whole_genome_SNVs.tsv.gz.tbi",
+  "mainWorkflow.sampleLocationFile": "https://storage.googleapis.com/topmed_workflow_testing/bravo/samples.txt",
   "mainWorkflow.inputCramFiles": [
-    "https://storage.cloud.google.com/topmed_workflow_testing/bravo/bams/HG02840.bam"
+    "https://storage.googleapis.com/topmed_workflow_testing/bravo/bams/HG02840.bam"
   ],
   "mainWorkflow.numberPercentiles": "10",
   "mainWorkflow.threads": "10",
