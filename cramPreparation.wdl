@@ -54,7 +54,7 @@ task prepareSequences {
         File out = "combined.cram"
     }
     runtime {
-        docker: "coverbeck/bravo-pipeline:latest"
+        docker: "quay.io/coverbeck/bravo-pipeline:latest"
         cpu: "1"
         bootDiskSizeGb: "50"
     }

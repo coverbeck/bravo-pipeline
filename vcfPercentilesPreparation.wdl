@@ -201,7 +201,7 @@ task addPercentiles {
         File out = "percentiles.vcf.gz"
     }
     runtime {
-        docker: "coverbeck/bravo-pipeline:latest"
+        docker: "quay.io/coverbeck/bravo-pipeline:latest"
         cpu: "1"
         bootDiskSizeGb: "150"
     }
