@@ -32,7 +32,7 @@ task extractId {
         File out = "${sample}.vcf.gz"
     }
     runtime {
-        docker: "statgen/bravo-pipeline:latest"
+        docker: "statgen/bravo-pipeline:noroot"
         cpu: "1"
         bootDiskSizeGb: "50"
     }
