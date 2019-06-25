@@ -201,7 +201,7 @@ task addPercentiles {
         File out = "percentiles.vcf.gz"
     }
     runtime {
-        docker: "statgen/bravo-pipeline:latest"
+        docker: "coverbeck/bravo-pipeline:latest"
         cpu: "1"
         bootDiskSizeGb: "150"
     }

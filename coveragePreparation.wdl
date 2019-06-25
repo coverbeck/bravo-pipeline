@@ -62,7 +62,7 @@ task aggrBasePair {
         File outAggrBasePair = "${chromosome}.${startBP}.${endBP}.json.gz"
     }
     runtime {
-        docker: "statgen/bravo-pipeline:latest"
+        docker: "coverbeck/bravo-pipeline:latest"
         cpu: "1"
         bootDiskSizeGb: "50"
     }
