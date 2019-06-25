@@ -60,3 +60,5 @@ RUN rm -rf /tmp/*
 # Set PATH for bins
 ENV PATH="${SRC_DIR}/DataPrep/cget/bin:${PATH}"
 ENV PATH="${SCRIPTS}:${PATH}"
+
+USER ubuntu
